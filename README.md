@@ -33,6 +33,6 @@ use it in the rest of your code (so you could uncomment afterwards to see it in 
 A common caveat you will run into when using Mockito with Scala is that when you stub a method,
 if you pass in matchers for the arguments (versus using exact values), then all of the arguments
 need to be matchers. This gets hairy when you have a method with implicits, because Scala will
-automatically plug in an explicit value, implicitly, and Mockito will complain because it wants a
+automatically plug in an exact value, implicitly, and Mockito will complain because it wants a
 matcher. See the examples for clarification on how to deal with this.
 
