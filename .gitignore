@@ -1,0 +1,28 @@
+# .gitignore
+
+# sbt
+target/
+.history
+
+# Java
+*.class
+
+# Logs
+*.log
+log/
+logs/
+
+# Temporary files
+*~
+*.bak
+*.old
+*.tmp
+nohup.out
+tmp/
+
+# vim
+.*.sw[a-z]
+
+# Mac OS X
+._*
+.DS_Store
