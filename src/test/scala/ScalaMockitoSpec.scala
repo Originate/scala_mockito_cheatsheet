@@ -10,7 +10,6 @@ import org.scalatest.FreeSpec
 import org.scalatest.{Matchers => ScalaTestMatchers}
 
 class ScalaMockitoSpec extends FreeSpec with ScalaTestMatchers with MockitoHelpers {
-
   class MockClass {
     def modifyString(s: String): String = s + "modified"
 
@@ -20,18 +19,12 @@ class ScalaMockitoSpec extends FreeSpec with ScalaTestMatchers with MockitoHelpe
   }
 
   "implicits" - {
-
     "when using matchers" - {
-
       "does not typecheck without implicits in scope" in new Context {
-        def illegal = ShouldNotTypecheck(
-          """when(mockedClass.double(Matchers.eq(1)))""",
-          """could not find implicit value for parameter b: String"""
-        )
+        """when(mockedClass.double(Matchers.eq(1)))""" shouldNot typeCheck
       }
 
       "with an implicit in scope" - {
-
         implicit val implicitString = "implicit"
 
         "throws an exception without the implicit being explicitly matched" in new Context {
@@ -45,18 +38,12 @@ class ScalaMockitoSpec extends FreeSpec with ScalaTestMatchers with MockitoHelpe
           mockedClass.double(1)
           verify(mockedClass).double(1)
         }
-
       }
-
     }
 
     "when using exact values" - {
-
       "does not typecheck without implicits in scope" in new Context {
-        def illegal = ShouldNotTypecheck(
-          """when(mockedClass.double(1))""",
-          """could not find implicit value for parameter b: String"""
-        )
+        """when(mockedClass.double(1))""" shouldNot typeCheck
       }
 
       "can be passed in explicitly" in new Context {
@@ -66,7 +53,6 @@ class ScalaMockitoSpec extends FreeSpec with ScalaTestMatchers with MockitoHelpe
       }
 
       "with an implicit in scope" - {
-
         implicit val implicitString = "implicit"
 
         "can be passed in implicitly" in new Context {
@@ -74,15 +60,11 @@ class ScalaMockitoSpec extends FreeSpec with ScalaTestMatchers with MockitoHelpe
           mockedClass.double(1)
           verify(mockedClass).double(1)
         }
-
       }
-
     }
-
   }
 
   "custom matchers" - {
-
     case class IsDivisibleBy(n: Int) extends ArgumentMatcher[Int] {
       def matches(request: Any): Boolean =
         request match {
@@ -110,11 +92,9 @@ class ScalaMockitoSpec extends FreeSpec with ScalaTestMatchers with MockitoHelpe
       mockedClass.tripleString(6)
       verify(mockedClass).tripleString(Matchers.argThat(IsDivisibleBy(3)))
     }
-
   }
 
   "returning argument dependant values" - {
-
     case class Multiply(multiplier: Int) extends Answer[String] {
       override def answer(invocation: InvocationOnMock) = {
         val n = invocation.getArguments()(0).asInstanceOf[String]
@@ -123,18 +103,14 @@ class ScalaMockitoSpec extends FreeSpec with ScalaTestMatchers with MockitoHelpe
     }
 
     "when using matchers" - {
-
       "can depend on a value that was passed into a matcher" in new Context {
         when(mockedClass.modifyString(Matchers.any[String])).thenAnswer(Multiply(5))
         mockedClass.modifyString("2") shouldBe "22222"
       }
-
     }
-
   }
 
   trait Context {
     val mockedClass = smartMock[MockClass]
   }
-
 }
